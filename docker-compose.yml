@@ -1,0 +1,16 @@
+version: "3.4"
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+services:
+  postgres:
+    <<: *restart_policy
+    env_file:
+      - .env
+    image: "postgres:9.6"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "dispatch-postgres:/var/lib/postgresql/data"
+volumes:
+  dispatch-postgres:
+    external: true
