@@ -26,8 +26,11 @@ except Exception as e:
 Inside of `plugin.py` declare your own `Plugin` class:
 
 ```python
+```python
+```python
+```python
 import dispatch_pluginname
-from dispatch.plugins.base.conversation import ConversationPlugin
+from dispatch.plugins import ConversationPlugin
 
 class PluginName(ConversationPlugin):
     title = 'Plugin Name'

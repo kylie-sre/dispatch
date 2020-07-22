@@ -2,6 +2,35 @@ version: "3.4"
 x-restart-policy: &restart_policy
   restart: unless-stopped
 services:
+  server:
+    <<: *restart_policy
+    build:
+      # Pro-tip: point this to a relative directory containing the Dispatch
+      # project root to pick up changes from your dev environment
+      # (e.g., ../dispatch-root)
+      context: "."
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch:server
+    depends_on:
+      - postgres
+    env_file:
+      - .env.local
+    command: ["/venv/bin/dispatch", "server", "start", "dispatch.main:app", "--host=0.0.0.0"]
+    ports:
+      - "8000:8000"
+  ui:
+    <<: *restart_policy
+    build:
+      # Pro-tip: point this to a relative directory containing the Dispatch
+      # project root to pick up changes from your dev environment
+      # (e.g., ../dispatch-root)
+      context: "./ui"
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch:ui
+    depends_on:
+      - postgres
+    env_file:
+      - ui/.env.local
+    ports:
+      - "3000:80"
   postgres:
     <<: *restart_policy
     env_file:

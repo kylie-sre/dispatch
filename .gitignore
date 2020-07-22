@@ -83,8 +83,8 @@ nosetests.xml
 .nox/
 .pytest_cache/
 .tox/
-src/dispatch/static/test/unit/coverage/
-src/dispatch/static/test/e2e/reports/
+dispatch/static/test/unit/coverage/
+dispatch/static/test/e2e/reports/
 
 # Translations
 *.mo
