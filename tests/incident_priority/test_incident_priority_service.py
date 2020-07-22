@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_get(session, incident_priority):
     from dispatch.incident_priority.service import get
 
@@ -24,7 +21,7 @@ def test_get_all(session, incident_priorities):
 
 def test_create(session):
     from dispatch.incident_priority.service import create
-    from dispatch.incident_priority.models import IncidentPriorityCreate
+    from dispatch import IncidentPriorityCreate
 
     name = "XXX"
     description = "XXXXXX"

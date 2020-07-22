@@ -1,23 +1,20 @@
-import pytest
-
-
 def test_get_group(session, group):
-    from dispatch.group.service import get
+    from dispatch.group import get
 
     t_group = get(db_session=session, group_id=group.id)
     assert t_group.id == group.id
 
 
 def test_get_all(session, groups):
-    from dispatch.group.service import get_all
+    from dispatch.group import get_all
 
     t_groups = get_all(db_session=session).all()
     assert len(t_groups) > 1
 
 
 def test_create(session):
-    from dispatch.group.service import create
-    from dispatch.group.models import GroupCreate
+    from dispatch.group import create
+    from dispatch.group import GroupCreate
 
     name = "XXX"
     email = "john.smith@example.org"
@@ -37,7 +34,7 @@ def test_create(session):
 
 
 def test_delete(session, group):
-    from dispatch.group.service import delete, get
+    from dispatch.group import delete, get
 
     delete(db_session=session, group_id=group.id)
     assert not get(db_session=session, group_id=group.id)

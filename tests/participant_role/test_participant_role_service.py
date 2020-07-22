@@ -48,7 +48,7 @@ def test_renounce_role(session, participant_role):
 
 def test_create(session, participant_role):
     from dispatch.participant_role.service import create
-    from dispatch.participant_role.models import ParticipantRoleCreate, ParticipantRoleType
+    from dispatch.participant_role import ParticipantRoleCreate, ParticipantRoleType
 
     role = ParticipantRoleType.incident_commander
 

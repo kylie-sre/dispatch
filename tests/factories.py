@@ -7,29 +7,29 @@ from factory import Sequence, post_generation, SubFactory, LazyAttribute
 from factory.alchemy import SQLAlchemyModelFactory
 from factory.fuzzy import FuzzyChoice, FuzzyText, FuzzyDateTime
 
-from dispatch.database import SessionLocal
+from dispatch import SessionLocal
 
 from dispatch.conference.models import Conference
-from dispatch.conversation.models import Conversation
+from dispatch.conversation import Conversation
 from dispatch.definition.models import Definition
-from dispatch.document.models import Document
-from dispatch.event.models import Event
-from dispatch.group.models import Group
+from dispatch.document import Document
+from dispatch.event import Event
+from dispatch.group import Group
 from dispatch.incident.models import Incident
-from dispatch.incident_priority.models import IncidentPriority
-from dispatch.incident_type.models import IncidentType
-from dispatch.individual.models import IndividualContact
-from dispatch.participant.models import Participant
-from dispatch.participant_role.models import ParticipantRole
-from dispatch.policy.models import Policy
+from dispatch import IncidentPriority
+from dispatch.incident_type import IncidentType
+from dispatch.individual import IndividualContact
+from dispatch.participant import Participant
+from dispatch.participant_role import ParticipantRole
+from dispatch.policy import Policy
 from dispatch.route.models import Recommendation, RecommendationAccuracy
-from dispatch.service.models import Service
-from dispatch.report.models import Report
-from dispatch.storage.models import Storage
+from dispatch import Service
+from dispatch.report import Report
+from dispatch.storage import Storage
 from dispatch.tag.models import Tag
-from dispatch.task.models import Task
-from dispatch.team.models import TeamContact
-from dispatch.term.models import Term
+from dispatch.task import Task
+from dispatch.team import TeamContact
+from dispatch.term import Term
 from dispatch.ticket.models import Ticket
 
 

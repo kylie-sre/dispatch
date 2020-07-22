@@ -1,8 +1,5 @@
-import pytest
-
-
 def test_conference_create(session):
-    from dispatch.conference.service import create
+    from dispatch.conference import create
     from dispatch.conference.models import ConferenceCreate
 
     resource_id = "000000"
@@ -28,7 +25,7 @@ def test_conference_create(session):
 
 
 def test_conference_get(session, conference):
-    from dispatch.conference.service import get
+    from dispatch.conference import get
 
     test_conference = get(db_session=session, conference_id=conference.id)
     assert test_conference.id == conference.id
@@ -36,7 +33,7 @@ def test_conference_get(session, conference):
 
 
 def test_conference_get_by_resource_id(session, conference):
-    from dispatch.conference.service import get_by_resource_id
+    from dispatch.conference import get_by_resource_id
 
     test_conference = get_by_resource_id(db_session=session, resource_id=conference.resource_id)
 
@@ -47,7 +44,7 @@ def test_conference_get_by_resource_id(session, conference):
 def test_conference_get_by_resource_type(session, conference):
     """The service method returns a list of conferences that match a given resource type. We'll test
     to ensure that the first and last items returned match the desired resource type."""
-    from dispatch.conference.service import get_by_resource_type
+    from dispatch.conference import get_by_resource_type
 
     conferences = get_by_resource_type(db_session=session, resource_type=conference.resource_type)
 
@@ -56,7 +53,7 @@ def test_conference_get_by_resource_type(session, conference):
 
 
 def test_conference_get_by_conference_id(session, conference):
-    from dispatch.conference.service import get_by_conference_id
+    from dispatch.conference import get_by_conference_id
 
     test_conference = get_by_conference_id(session, conference.conference_id)
 
@@ -65,7 +62,7 @@ def test_conference_get_by_conference_id(session, conference):
 
 
 def test_conference_get_by_incident_id(session, conference):
-    from dispatch.conference.service import get_by_incident_id
+    from dispatch.conference import get_by_incident_id
 
     test_conference = get_by_incident_id(db_session=session, incident_id=conference.incident.id)
 
@@ -78,7 +75,7 @@ def test_conference_get_all(session, conferences):
     Therefore, we pass "conferences" as an argument, to manually create several in the DB.
     """
 
-    from dispatch.conference.service import get_all
+    from dispatch.conference import get_all
 
     test_conferences = get_all(db_session=session).all()
 

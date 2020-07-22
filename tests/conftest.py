@@ -21,7 +21,7 @@ environ["METRIC_PROVIDERS"] = ""  # TODO move this to the default
 environ["STATIC_DIR"] = ""  # we don't need static files for tests
 
 from dispatch import config
-from dispatch.database import Base, engine, SessionLocal
+from dispatch import Base, engine, SessionLocal
 
 from .factories import (
     ConferenceFactory,
@@ -70,7 +70,7 @@ def pytest_runtest_makereport(item, call):
 @pytest.fixture(scope="session")
 def testapp():
     # we only want to use test plugins so unregister everybody else
-    from dispatch.plugins.base import unregister, plugins
+    from dispatch.plugins import unregister, plugins
     from dispatch.main import app
 
     for p in plugins.all():
@@ -109,8 +109,8 @@ def client(testapp, session, client):
 
 @pytest.fixture
 def conference_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.conference import TestConferencePlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestConferencePlugin
 
     register(TestConferencePlugin)
     return TestConferencePlugin
@@ -118,8 +118,8 @@ def conference_plugin():
 
 @pytest.fixture
 def contact_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.contact import TestContactPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestContactPlugin
 
     register(TestContactPlugin)
     return TestContactPlugin
@@ -127,8 +127,8 @@ def contact_plugin():
 
 @pytest.fixture
 def conversation_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.conversation import TestConversationPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestConversationPlugin
 
     register(TestConversationPlugin)
     return TestConversationPlugin
@@ -136,8 +136,8 @@ def conversation_plugin():
 
 @pytest.fixture
 def definition_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.definition import TestDefinitionPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestDefinitionPlugin
 
     register(TestDefinitionPlugin)
     return TestDefinitionPlugin
@@ -145,8 +145,8 @@ def definition_plugin():
 
 @pytest.fixture
 def document_resolver_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.document_resolver import TestDocumentResolverPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestDocumentResolverPlugin
 
     register(TestDocumentResolverPlugin)
     return TestDocumentResolverPlugin
@@ -154,8 +154,8 @@ def document_resolver_plugin():
 
 @pytest.fixture
 def document_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.document import TestDocumentPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestDocumentPlugin
 
     register(TestDocumentPlugin)
     return TestDocumentPlugin
@@ -163,8 +163,8 @@ def document_plugin():
 
 @pytest.fixture
 def oncall_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.oncall import TestOncallPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestOncallPlugin
 
     register(TestOncallPlugin)
     return TestOncallPlugin
@@ -172,8 +172,8 @@ def oncall_plugin():
 
 @pytest.fixture
 def participant_group_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.participant_group import TestParticipantGroupPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestParticipantGroupPlugin
 
     register(TestParticipantGroupPlugin)
     return TestParticipantGroupPlugin
@@ -181,8 +181,8 @@ def participant_group_plugin():
 
 @pytest.fixture
 def participant_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.participant import TestParticipantPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestParticipantPlugin
 
     register(TestParticipantPlugin)
     return TestParticipantPlugin
@@ -190,8 +190,8 @@ def participant_plugin():
 
 @pytest.fixture
 def storage_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.storage import TestStoragePlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestStoragePlugin
 
     register(TestStoragePlugin)
     return TestStoragePlugin
@@ -199,8 +199,8 @@ def storage_plugin():
 
 @pytest.fixture
 def task_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.task import TestTaskPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestTaskPlugin
 
     register(TestTaskPlugin)
     return TestTaskPlugin
@@ -208,8 +208,8 @@ def task_plugin():
 
 @pytest.fixture
 def term_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.term import TestTermPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestTermPlugin
 
     register(TestTermPlugin)
     return TestTermPlugin
@@ -217,8 +217,8 @@ def term_plugin():
 
 @pytest.fixture
 def ticket_plugin():
-    from dispatch.plugins.base import register
-    from dispatch.plugins.dispatch_test.ticket import TestTicketPlugin
+    from dispatch.plugins import register
+    from dispatch.plugins import TestTicketPlugin
 
     register(TestTicketPlugin)
     return TestTicketPlugin

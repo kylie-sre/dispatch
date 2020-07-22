@@ -69,7 +69,7 @@ def test_get_all_by_incident_id(session, incident, participants):
 
 def test_get_or_create(session, incident, individual_contact, participant_role):
     from dispatch.participant.service import create
-    from dispatch.participant.models import Participant, ParticipantCreate
+    from dispatch.participant import Participant, ParticipantCreate
 
     participant = (
         session.query(Participant)
@@ -87,7 +87,7 @@ def test_get_or_create(session, incident, individual_contact, participant_role):
 
 def test_create(session, participant_role):
     from dispatch.participant.service import create
-    from dispatch.participant.models import ParticipantCreate
+    from dispatch.participant import ParticipantCreate
 
     participant_in = ParticipantCreate(participant_role=[participant_role])
     participant = create(db_session=session, participant_in=participant_in)

@@ -5,21 +5,21 @@ from uuid import uuid4
 
 
 def test_get_event(session, event):
-    from dispatch.event.service import get
+    from dispatch.event import get
 
     t_event = get(db_session=session, event_id=event.id)
     assert t_event.id == event.id
 
 
 def test_get_by_uuid(session, event):
-    from dispatch.event.service import get_by_uuid
+    from dispatch.event import get_by_uuid
 
     t_event = get_by_uuid(db_session=session, uuid=event.uuid)
     assert t_event.uuid == event.uuid
 
 
 def test_get_by_incident_id(session, event):
-    from dispatch.event.service import get_by_incident_id
+    from dispatch.event import get_by_incident_id
 
     t_events = get_by_incident_id(db_session=session, incident_id=event.incident_id).all()
     assert len(t_events) > 1
@@ -27,7 +27,7 @@ def test_get_by_incident_id(session, event):
 
 @pytest.mark.skip()
 def test_get_by_incident_id_and_source(session, incident, event):
-    from dispatch.event.service import get_by_incident_id_and_source
+    from dispatch.event import get_by_incident_id_and_source
 
     t_events = get_by_incident_id_and_source(
         db_session=session, incident_id=incident.id, source=event.source
@@ -37,7 +37,7 @@ def test_get_by_incident_id_and_source(session, incident, event):
 
 @pytest.mark.skip()
 def test_get_by_incident_id_and_individual_id(session, incident, individual_contact):
-    from dispatch.event.service import test_get_by_incident_id_and_individual_id
+    from dispatch.event import test_get_by_incident_id_and_individual_id
 
     t_events = test_get_by_incident_id_and_individual_id(
         db_session=session, incident_id=incident.id, individual_id=individual_contact.id
@@ -46,15 +46,15 @@ def test_get_by_incident_id_and_individual_id(session, incident, individual_cont
 
 
 def test_get_all(session, events):
-    from dispatch.event.service import get_all
+    from dispatch.event import get_all
 
     t_events = get_all(db_session=session).all()
     assert len(t_events) > 1
 
 
 def test_create(session):
-    from dispatch.event.service import create
-    from dispatch.event.models import EventCreate
+    from dispatch.event import create
+    from dispatch.event import EventCreate
 
     uuid = uuid4()
     started_at = datetime.datetime.now()
@@ -70,8 +70,8 @@ def test_create(session):
 
 @pytest.mark.skip
 def test_update(session, event):
-    from dispatch.event.event import update
-    from dispatch.event.models import EventUpdate
+    from dispatch.event import update
+    from dispatch.event import EventUpdate
 
     source = "Source Updated"
     event_in = EventUpdate(source=source)
@@ -80,15 +80,14 @@ def test_update(session, event):
 
 
 def test_delete(session, event):
-    from dispatch.event.service import delete, get
+    from dispatch.event import delete, get
 
     delete(db_session=session, event_id=event.id)
     assert not get(db_session=session, event_id=event.id)
 
 
 def test_log(session, incident):
-    from dispatch.event.service import log
-    from dispatch.event.models import EventCreate
+    from dispatch.event import log
 
     source = "Dispatch event source"
     description = "Dispatch event description"
