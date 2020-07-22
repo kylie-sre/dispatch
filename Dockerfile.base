@@ -8,11 +8,10 @@ LABEL org.opencontainers.image.vendor="Unity Tech."
 LABEL org.opencontainers.image.authors="sre@unity3d.com"
 
 RUN mkdir /dispatch
-COPY requirements.txt /dispatch/requirements.txt
+COPY requirements-base.txt /dispatch/requirements-base.txt
 RUN python -m pip install --upgrade pip && \
     python -m venv /venv && \
-    /venv/bin/pip install -r /dispatch/requirements.txt
-    # Get and set up Node for front-end asset building
+    /venv/bin/pip install -r /dispatch/requirements-base.txt
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # Needed for GPG

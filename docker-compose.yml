@@ -2,6 +2,17 @@ version: "3.4"
 x-restart-policy: &restart_policy
   restart: unless-stopped
 services:
+  base:
+    <<: *restart_policy
+    build:
+      # Pro-tip: point this to a relative directory containing the Dispatch
+      # project root to pick up changes from your dev environment
+      # (e.g., ../dispatch-root)
+      context: "."
+      dockerfile: Dockerfile.base
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch:base
+    env_file:
+      - .env.local
   server:
     <<: *restart_policy
     build:
@@ -11,6 +22,7 @@ services:
       context: "."
     image: gcr.io/unity-ie-sre-isolated-test/dispatch:server
     depends_on:
+      - base
       - postgres
     env_file:
       - .env.local

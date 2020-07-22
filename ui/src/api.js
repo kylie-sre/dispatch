@@ -3,6 +3,7 @@ import store from "@/store"
 import router from "./router"
 
 const instance = axios.create({
+  // TODO: use config value for API server host:port
   baseURL: "http://localhost:8000/api/v1"
 })
 
