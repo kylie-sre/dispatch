@@ -3,7 +3,6 @@ x-restart-policy: &restart_policy
   restart: unless-stopped
 services:
   base:
-    <<: *restart_policy
     build:
       # Pro-tip: point this to a relative directory containing the Dispatch
       # project root to pick up changes from your dev environment
