@@ -79,7 +79,7 @@ def paginated(data_key):
     wait=wait_exponential(multiplier=1, min=2, max=5),
 )
 def make_call(client: Any, func: Any, propagate_errors: bool = False, **kwargs):
-    """Make an google client api call."""
+    """Make an Google client api call."""
     try:
         return getattr(client, func)(**kwargs).execute()
     except HttpError as e:
@@ -133,8 +133,8 @@ def get_file(client: Any, file_id: str):
         client.files(),
         "get",
         fileId=file_id,
-        supportsTeamDrives=True,
         fields="id, name, parents, webViewLink",
+        supportsAllDrives=True,
     )
 
 
@@ -156,7 +156,7 @@ def download_file(client: Any, file_id: str):
 
 
 def download_google_document(client: Any, file_id: str, mime_type: str = "text/plain"):
-    """Downloads a google document."""
+    """Downloads a Google document."""
     request = client.files().export_media(fileId=file_id, mimeType=mime_type)
 
     fp = io.BytesIO()
@@ -191,8 +191,8 @@ def create_file(
         client.files(),
         "create",
         body=file_metadata,
-        supportsTeamDrives=True,
         fields="id, name, parents, webViewLink",
+        supportsAllDrives=True,
     )
 
     for member in members:
@@ -250,16 +250,16 @@ def copy_file(client: Any, folder_id: str, file_id: str, new_file_name: str):
     return make_call(
         client.files(),
         "copy",
-        body={"name": new_file_name, "teamDriveId": folder_id},
+        body={"name": new_file_name, "driveId": folder_id},
         fileId=file_id,
         fields="id, name, parents, webViewLink",
-        supportsTeamDrives=True,
+        supportsAllDrives=True,
     )
 
 
 def delete_file(client: Any, folder_id: str, file_id: str):
     """Deletes a file from a teamdrive."""
-    return make_call(client.files(), "delete", fileId=file_id, supportsTeamDrives=True)
+    return make_call(client.files(), "delete", fileId=file_id, supportsAllDrives=True)
 
 
 def add_domain_permission(
@@ -278,7 +278,7 @@ def add_domain_permission(
         body=permission,
         sendNotificationEmail=False,
         fields="id",
-        supportsTeamDrives=True,
+        supportsAllDrives=True,
     )
 
 
@@ -298,7 +298,7 @@ def add_permission(
         body=permission,
         sendNotificationEmail=False,
         fields="id",
-        supportsTeamDrives=True,
+        supportsAllDrives=True,
     )
 
 
@@ -308,8 +308,8 @@ def remove_permission(client: Any, email: str, folder_id: str):
         client.permissions(),
         "list",
         fileId=folder_id,
-        supportsTeamDrives=True,
         fields="permissions(id, emailAddress)",
+        supportsAllDrives=True,
     )
 
     for p in permissions["permissions"]:
@@ -319,13 +319,13 @@ def remove_permission(client: Any, email: str, folder_id: str):
                 "delete",
                 fileId=folder_id,
                 permissionId=p["id"],
-                supportsTeamDrives=True,
+                supportsAllDrives=True,
             )
 
 
 def move_file(client: Any, folder_id: str, file_id: str):
     """Moves a file from one team drive to another"""
-    f = make_call(client.files(), "get", fileId=file_id, fields="parents", supportsTeamDrives=True)
+    f = make_call(client.files(), "get", fileId=file_id, fields="parents", supportsAllDrives=True)
 
     previous_parents = ",".join(f.get("parents"))
 
@@ -335,8 +335,8 @@ def move_file(client: Any, folder_id: str, file_id: str):
         fileId=file_id,
         addParents=folder_id,
         removeParents=previous_parents,
-        supportsTeamDrives=True,
         fields="id, name, parents, webViewLink",
+        supportsAllDrives=True,
     )
 
 
