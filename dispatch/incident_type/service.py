@@ -40,11 +40,9 @@ def get_all(*, db_session) -> List[Optional[IncidentType]]:
 
 def create(*, db_session, incident_type_in: IncidentTypeCreate) -> IncidentType:
     """Creates an incident type."""
-    template_document = Document()
-    if incident_type_in.template_document:
-        template_document = document_service.get(
-            db_session=db_session, document_id=incident_type_in.template_document.id
-        )
+    template_document = document_service.get(
+        db_session=db_session, document_id=getattr(incident_type_in.template_document, "id", None)
+    )
 
     commander_service = Service()
     if incident_type_in.commander_service:
