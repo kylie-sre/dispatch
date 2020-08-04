@@ -1,6 +1,8 @@
 import logging
 
 import sentry_sdk
+from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
+from sentry_sdk.integrations.aiohttp import AioHttpIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 from .config import SENTRY_DSN, ENV
@@ -17,4 +19,8 @@ sentry_logging = LoggingIntegration(
 def configure_extensions():
     log.debug("Configuring extensions...")
     if SENTRY_DSN:
-        sentry_sdk.init(dsn=str(SENTRY_DSN), integrations=[sentry_logging], environment=ENV)
+        sentry_sdk.init(
+            dsn=str(SENTRY_DSN),
+            integrations=[sentry_logging, AioHttpIntegration(), SqlalchemyIntegration()],
+            environment=ENV,
+        )

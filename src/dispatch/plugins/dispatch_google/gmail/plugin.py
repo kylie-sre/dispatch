@@ -20,7 +20,7 @@ from dispatch.messaging import (
     MessageType,
     render_message_template,
 )
-from dispatch.plugins.bases import ConversationPlugin
+from dispatch.plugins.bases import EmailPlugin
 from dispatch.plugins.dispatch_google import gmail as google_gmail_plugin
 from dispatch.plugins.dispatch_google.common import get_service
 from dispatch.plugins.dispatch_google.config import (
@@ -83,6 +83,7 @@ def create_multi_message_body(
 
     master_map = []
     for item in items:
+        print(f"WARNING: {item}")
         master_map.append(render_message_template(message_template, **item))
 
     kwargs.update({"items": master_map, "description": description})
@@ -113,10 +114,10 @@ def render_email(name, message):
 
 @apply(timer, exclude=["__init__"])
 @apply(counter, exclude=["__init__"])
-class GoogleGmailConversationPlugin(ConversationPlugin):
-    title = "Google Gmail Plugin - Conversation Management"
-    slug = "google-gmail-conversation"
-    description = "Uses gmail to facilitate conversations."
+class GoogleGmailEmailPlugin(EmailPlugin):
+    title = "Google Gmail Plugin - Email Management"
+    slug = "google-gmail-email"
+    description = "Uses gmail to facilitate emails."
     version = google_gmail_plugin.__version__
 
     author = "Netflix"
