@@ -2,6 +2,7 @@ install:
 	python3 -m venv ~/.venv/dispatch
 	DISPATCH_LIGHT_BUILD=1 ~/.venv/dispatch/bin/pip install -e .[dev]
 	~/.venv/dispatch/bin/pip install ipdb
+	~/.venv/dispatch/bin/dispatch plugins install
 
 freeze:
 	@~/.venv/dispatch/bin/pip freeze
