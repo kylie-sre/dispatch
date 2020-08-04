@@ -3,9 +3,8 @@ import logging
 from schedule import every
 from sqlalchemy import func
 
-from dispatch.config import INCIDENT_PLUGIN_STORAGE_SLUG
 from dispatch.decorators import background_task
-from dispatch.plugins.base import plugins
+from dispatch.plugin import service as plugin_service
 from dispatch.route import service as route_service
 from dispatch.scheduler import scheduler
 from dispatch.extensions import sentry_sdk
@@ -24,9 +23,7 @@ def sync_document_terms(db_session=None):
 
     for doc in documents:
         log.debug(f"Processing document. Name: {doc.name}")
-        p = plugins.get(
-            INCIDENT_PLUGIN_STORAGE_SLUG
-        )  # this may need to be refactored if we support multiple document types
+        p = plugin_service.get_active(db_session=db_session, plugin_type="storage")
 
         try:
             if "sheet" in doc.resource_type:
@@ -34,7 +31,7 @@ def sync_document_terms(db_session=None):
             else:
                 mime_type = "text/plain"
 
-            doc_text = p.get(doc.resource_id, mime_type)
+            doc_text = p.instance.get(doc.resource_id, mime_type)
             extracted_terms = route_service.get_terms(db_session=db_session, text=doc_text)
 
             matched_terms = (
