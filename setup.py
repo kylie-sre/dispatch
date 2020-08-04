@@ -8,8 +8,10 @@ ROOT_PATH = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_requirements(env):
+    requirements = ["dispatch"]
     with open("requirements-{}.txt".format(env)) as fp:
-        return [x.strip() for x in fp.read().split("\n") if not x.startswith("#")]
+        requirements.extend((x.strip() for x in fp.read().split("\n") if not x.startswith("#")))
+    return requirements
 
 
 install_requires = get_requirements("base")
