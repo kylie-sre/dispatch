@@ -1,55 +1,68 @@
-apiVersion: apps/v1
+---
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ include "deploy.fullname" . }}
   labels:
-    {{- include "deploy.labels" . | nindent 4 }}
+    app: {{ .Values.name }}
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "deploy.selectorLabels" . | nindent 6 }}
+      app: {{  .Values.name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 30%
+    type: RollingUpdate
   template:
     metadata:
       labels:
-        {{- include "deploy.selectorLabels" . | nindent 8 }}
+        app: {{ .Values.name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-      serviceAccountName: {{ include "deploy.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      serviceAccountName: xray-svc-acct
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+          - ./xray-server
+        args:
+          - "-f"
+          - "{{ .Values.environment }}"
+          - "-d"
+          - "/etc"
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: PROJECT_NAME
+          value: {{ .Values.project }}
+        - name: CLUSTER_NAME
+          value: {{ .Values.cluster }}
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: APP_VERSION
+          value: "{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        livenessProbe:
+          httpGet:
+            path: "/hc"
+            port: {{ .Values.service.internalPort }}
+          timeoutSeconds: 5
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: {{ .Values.service.internalPort }}
+            path: "/hc"
+          timeoutSeconds: 5
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        resources:
+{{ toYaml .Values.resources | indent 10 }}

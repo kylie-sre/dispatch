@@ -1,35 +1,36 @@
-# Default values for deploy.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
+credsPath: "/etc/gcp/test.json"
+name: xray
 replicaCount: 1
-
+revision: "HEAD"
+cluster: local
+project: "unity-ie-sre-isolated-test"
+environment: test
+namespace: sre
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
-serviceAccount:
-  create: true
-  annotations: {}
-  name: dispatch-svc-acct
+  repository: gcr.io/unity-ie-sre-isolated-test/dispatch-api:0.1.0
+  tag: 2.8.0
+  pullPolicy: Always
 service:
-  type: ClusterIP
-  port: 80
+  externalPort: 443
+  internalPort: 8080
+  prometheus_path: /metrics
+  prometheus_port: 8080
+  prometheus_scrape: true
 ingress:
-  enabled: false
-  annotations: {}
-     kubernetes.io/ingress.class: nginx
-     kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: dispatch.local
-      paths: []
-  tls: []
-    - secretName: chart-example-tls
-      hosts:
-        - chart-example.local
-resources: {}
-   limits:
-     cpu: 100m
-     memory: 128Mi
-   requests:
-     cpu: 100m
-     memory: 128Mi
+  host: xray.test.sre.ie.internal.unity3d.com
+  name: xray
+  cors:
+    enabled: true
+    allowMethods: "GET, OPTIONS"
+    allowOrigin: "*"
+    allowCredentials: true
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+cache:
+  name: dev-cache
+  port: 6379

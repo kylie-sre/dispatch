@@ -1,0 +1,19 @@
+xray:
+  name: xray
+  environment: dev
+  cdp:
+    brokers: kafka.lender.ausw1a.stg.cdp.internal.unity3d.com:9092
+    endpoint: https://stg-lender.cdp.internal.unity3d.com/v1/events
+  resources:
+    requests:
+      cpu: "250m"
+      memory: 50Mi
+    limits:
+      cpu: "500m"
+      memory: 250Mi
+ingress:
+  host: xray.minikube.local
+  name: xray-minikube-local
+service:
+  kube53_name: xray
+  domain: minukube.local

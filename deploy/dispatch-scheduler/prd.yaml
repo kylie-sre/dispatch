@@ -1,0 +1,12 @@
+credsPath: "/etc/gcp/prd.json"
+cluster: sre-prd
+project: unity-ie-sre-isolated-prd
+environment: prd
+image:
+  repository: gcr.io/unity-ie-sre-isolated-prd/xray
+  pullPolicy: IfNotPresent
+ingress:
+  host: xray.sre.ie.internal.unity3d.com
+  name: xray
+cache:
+  name: xray-cache

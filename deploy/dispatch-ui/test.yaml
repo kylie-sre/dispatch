@@ -1,0 +1,4 @@
+cluster: sre-test
+ingress:
+  host: xray.test.sre.ie.internal.unity3d.com
+  name: xray

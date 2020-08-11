@@ -1,0 +1,132 @@
+---
+# Source: xray/templates/svc-acct.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    annotations:
+        iam.gke.io/gcp-service-account: xray-svc-acct@unity-ie-sre-isolated-test.iam.gserviceaccount.com
+    name: xray-svc-acct
+    namespace: sre
+---
+# Source: xray/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: xray
+  namespace: sre
+  labels:
+    app: xray
+  annotations:
+    prometheus.io/name: xray
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: "8080"
+    prometheus.io/scrape: "true"
+spec:
+  ports:
+    - port: 443
+      targetPort: 8080
+      protocol: TCP
+      name: xray
+  selector:
+    app: xray
+---
+# Source: xray/templates/deployment.yaml
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: xray
+  name: xray
+  namespace: sre
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: xray
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 30%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: xray
+    spec:
+      serviceAccountName: xray-svc-acct
+      containers:
+      - name: xray
+        image: "gcr.io/unity-ie-sre-isolated-test/dispatch-api:0.1.0:2.8.0"
+        imagePullPolicy: Always
+        command:
+          - ./xray-server
+        args:
+          - "-f"
+          - "test"
+          - "-d"
+          - "/etc"
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: PROJECT_NAME
+          value: unity-ie-sre-isolated-test
+        - name: CLUSTER_NAME
+          value: local
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: APP_VERSION
+          value: "2.8.0"
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: "/hc"
+            port: 8080
+          timeoutSeconds: 5
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            port: 8080
+            path: "/hc"
+          timeoutSeconds: 5
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 100m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+---
+# Source: xray/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+    name: xray
+    namespace: sre
+    annotations:
+        kubernetes.io/ingress.class: "nginx"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-methods: "GET, OPTIONS"
+        nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+        nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+spec:
+    rules:
+        - host: xray.test.sre.ie.internal.unity3d.com
+          http:
+            paths:
+            - path: /
+              backend:
+                serviceName: xray
+                servicePort: xray
+
+    tls:
+        - hosts:
+              - xray.test.sre.ie.internal.unity3d.com
+          secretName: wildcard-sre

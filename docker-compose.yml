@@ -9,7 +9,7 @@ services:
       # (e.g., ../dispatch-root)
       context: "."
       dockerfile: Dockerfile.base
-    image: gcr.io/unity-ie-sre-isolated-test/dispatch:base
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch-api:base
     env_file:
       - .env.local
   server:
@@ -19,7 +19,7 @@ services:
       # project root to pick up changes from your dev environment
       # (e.g., ../dispatch-root)
       context: "."
-    image: gcr.io/unity-ie-sre-isolated-test/dispatch:server
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch-api:0.1.0
     depends_on:
       - base
       - postgres
@@ -35,7 +35,7 @@ services:
       # project root to pick up changes from your dev environment
       # (e.g., ../dispatch-root)
       context: "./ui"
-    image: gcr.io/unity-ie-sre-isolated-test/dispatch:ui
+    image: gcr.io/unity-ie-sre-isolated-test/dispatch-ui:0.1.0
     depends_on:
       - postgres
     env_file:

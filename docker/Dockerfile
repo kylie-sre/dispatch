@@ -1,4 +1,4 @@
-FROM gcr.io/unity-ie-sre-isolated-test/dispatch:base
+FROM gcr.io/unity-ie-sre-isolated-test/dispatch-api:base
 LABEL maintainer="sre@unity3d.com"
 LABEL org.opencontainers.image.title="Dispatch API Server"
 LABEL org.opencontainers.image.description="Docker image for serving the Dispatch API server"
